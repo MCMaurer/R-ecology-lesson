@@ -31,12 +31,12 @@ We start by loading the required packages. **`ggplot2`** is included in the **`t
 library(tidyverse)
 ```
 
-Later we will learn how to read in data in R, but for now we are going to use a clean and ready to use dataset that is provided by the **`ratdat`** data package. To make this dataset available in memory, we need to load this package. We will use the `portal_dipo` dataset.
+Later we will learn how to read in data in R, but for now we are going to use a clean and ready to use dataset that is provided by the **`ratdat`** data package. To make this dataset available in memory, we need to load this package. We will use the `surveys` dataset.
 
 
 ```{r load-ratdat-package,message=FALSE, purl=TRUE}
 library(ratdat)
-portal_dipo
+surveys
 ```                                      
 
 
@@ -66,13 +66,13 @@ ggplot(data = <DATA>, mapping = aes(<MAPPINGS>)) + <GEOM_FUNCTION>()
 - use the `ggplot()` function and bind the plot to a specific data frame using the `data` argument
 
 ```{r, eval=FALSE, purl=FALSE}
-ggplot(data = portal_dipo)
+ggplot(data = surveys)
 ```
 
 - define a mapping (using the aesthetic (`aes`) function), by selecting the variables to be plotted and specifying how to present them in the graph, e.g. as x/y positions or characteristics such as size, shape, color, etc.
 
 ```{r, eval=FALSE, purl=FALSE}
-ggplot(data = portal_dipo, aes(x = weight, y = hindfoot_length))
+ggplot(data = surveys, aes(x = weight, y = hindfoot_length))
 ```
 
 - add 'geoms' – graphical representations of the data in the plot (points,
@@ -86,7 +86,7 @@ ggplot(data = portal_dipo, aes(x = weight, y = hindfoot_length))
 To add a geom to the plot use the `+` operator. Because we have two continuous variables, let's use `geom_point()` first to create a scatter plot:
 
 ```{r first-ggplot, purl=FALSE}
-ggplot(data = portal_dipo, aes(x = weight, y = hindfoot_length)) +
+ggplot(data = surveys, aes(x = weight, y = hindfoot_length)) +
     geom_point()
 ```
 
@@ -97,7 +97,7 @@ generated with code like this:
 
 ```{r, first-ggplot-with-plus, eval=FALSE, purl=FALSE}
 ## Assign plot to a variable
-surveys_plot <- ggplot(data = portal_dipo, aes(x = weight, y = hindfoot_length))
+surveys_plot <- ggplot(data = surveys, aes(x = weight, y = hindfoot_length))
 
 ## Draw the plot
 surveys_plot + 
@@ -112,7 +112,7 @@ Building plots with **`ggplot2`** is typically an iterative process. We start by
 defining the dataset we'll use, lay out the axes, and choose a geom:
 
 ```{r create-ggplot-object, purl=FALSE}
-ggplot(data = portal_dipo, aes(x = weight, y = hindfoot_length)) +
+ggplot(data = surveys, aes(x = weight, y = hindfoot_length)) +
     geom_point()
 ```
 
@@ -120,7 +120,7 @@ Now, we can start modifying this plot to extract more information from it. For
 instance, we can add transparency (`alpha`) to avoid overplotting:
 
 ```{r adding-transparency, purl=FALSE}
-ggplot(data = portal_dipo, aes(x = weight, y = hindfoot_length)) +
+ggplot(data = surveys, aes(x = weight, y = hindfoot_length)) +
     geom_point(alpha = 0.2)
 ```
 
@@ -130,14 +130,14 @@ It might also be a good idea to use jittering:
 
 
 ```{r jittering, purl=FALSE}
-ggplot(data = portal_dipo, aes(x = weight, y = hindfoot_length)) +
+ggplot(data = surveys, aes(x = weight, y = hindfoot_length)) +
     geom_point(alpha = 0.2,  position = position_jitter())
 ```
 
 We can also add colors for all the points:
 
 ```{r adding-colors, purl=FALSE}					
-ggplot(data = portal_dipo, aes(x = weight, y = hindfoot_length)) +
+ggplot(data = surveys, aes(x = weight, y = hindfoot_length)) +
     geom_point(alpha = 0.1, color = "blue")
 ```
 
@@ -145,7 +145,7 @@ Or to color each species in the plot differently, you could specify the variable
 
 
 ```{r color-by-species, purl=FALSE}
-ggplot(data = portal_dipo, aes(x = weight, y = hindfoot_length)) +
+ggplot(data = surveys, aes(x = weight, y = hindfoot_length)) +
     geom_point(alpha = 0.1, aes(color = species_id))
 ```
 
@@ -166,14 +166,14 @@ split one plot into multiple plots based on discrete variables included in the
 dataset. We will use it to make a time series plot for each species:
 
 ```{r}
-ggplot(data = portal_dipo, aes(x = weight, y = hindfoot_length)) +
+ggplot(data = surveys, aes(x = weight, y = hindfoot_length)) +
     geom_point(aes(color = species_id, shape = sex),
                position = position_jitter(), alpha = .3) +
     facet_wrap(~ species_id)
 ```
 
 ```{r}
-ggplot(data = portal_dipo, aes(x = weight, y = hindfoot_length)) +
+ggplot(data = surveys, aes(x = weight, y = hindfoot_length)) +
     geom_point(aes(color = species_id, shape = sex),
                position = position_jitter(), alpha = .3) +
     facet_grid(species_id ~ year)
@@ -190,7 +190,7 @@ ggplot(data = portal_dipo, aes(x = weight, y = hindfoot_length)) +
 We can use boxplots to visualize the distribution of weight within each species:
 
 ```{r boxplot, purl=FALSE}
-ggplot(data = portal_dipo, aes(x = species_id, y = weight)) +
+ggplot(data = surveys, aes(x = species_id, y = weight)) +
     geom_boxplot()
 ```
 
@@ -198,7 +198,7 @@ By adding points to boxplot, we can have a better idea of the number of
 measurements and of their distribution:
 
 ```{r boxplot-with-points, purl=FALSE}
-ggplot(data = portal_dipo, aes(x = species_id, y = weight)) +
+ggplot(data = surveys, aes(x = species_id, y = weight)) +
     geom_boxplot(alpha = 0) +
     geom_jitter(alpha = 0.3, color = "tomato")
 ```
@@ -305,7 +305,7 @@ portal <- dplyr::left_join(surveys, species) %>%
     dplyr::filter(taxa == "Rodent")
 
 
-portal_dipo <- portal %>%
+surveys <- portal %>%
     dplyr::filter(species_id %in% c("DO", "DM", "DS"),
                   year >= 1977 & year <= 1982)
 ```
